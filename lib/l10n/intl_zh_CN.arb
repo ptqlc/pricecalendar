@@ -1,0 +1,11 @@
+{
+  "lang_en": "英语",
+  "lang_zh": "中文",
+
+  "settings_title": "设置",
+  "settings_theme": "外观主题",
+  "settings_reset_pwd": "重置密码",
+  "settings_role": "角色",
+  "settings_lang": "语言",
+  "settings_logout": "退出"
+}

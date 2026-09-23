@@ -1,0 +1,31 @@
+library routes;
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_find_job/store/index.dart';
+import 'package:flutter_find_job/pages/apply_detail/index.dart';
+import 'package:flutter_find_job/pages/call/index.dart';
+import 'package:flutter_find_job/pages/conversation/index.dart';
+import 'package:flutter_find_job/pages/help_faq/index.dart';
+import 'package:flutter_find_job/pages/job/index.dart';
+import 'package:flutter_find_job/pages/job_collect/index.dart';
+import 'package:flutter_find_job/pages/job_detail/index.dart';
+import 'package:flutter_find_job/pages/job_search/index.dart';
+import 'package:flutter_find_job/pages/profile_category/index.dart';
+import 'package:flutter_find_job/pages/profile_edit/index.dart';
+import 'package:flutter_find_job/pages/reset_password/index.dart';
+import 'package:flutter_find_job/pages/role/index.dart';
+import 'package:flutter_find_job/pages/sign/index.dart';
+import 'package:flutter_find_job/pages/main/index.dart';
+import 'package:flutter_find_job/pages/notice/index.dart';
+import 'package:flutter_find_job/pages/settings/index.dart';
+import 'package:flutter_find_job/pages/settings_theme/index.dart';
+import 'package:flutter_find_job/pages/splash/index.dart';
+import 'package:flutter_find_job/pages/vacancy_detail/index.dart';
+import 'package:flutter_find_job/pages/vacancy_edit/index.dart';
+import 'package:flutter_find_job/pages/vacancy_geek/index.dart';
+import 'package:flutter_find_job/pages/vacancy_resume/index.dart';
+import 'package:go_router/go_router.dart';
+
+part 'routes.dart';
+part 'observers.dart';

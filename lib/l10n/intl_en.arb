@@ -1,0 +1,11 @@
+{
+  "lang_en": "English",
+  "lang_zh": "Chinese",
+
+  "settings_title": "Settings",
+  "settings_theme": "Appearance",
+  "settings_reset_pwd": "Reset Password",
+  "settings_role": "Role",
+  "settings_lang": "Language",
+  "settings_logout": "Logout"
+}
