@@ -132,13 +132,14 @@ class _CalendarPageState extends State<CalendarPage>
                           final visibleMonth = _month;
                           final leadingDays =
                               DateTime(visibleMonth.year, visibleMonth.month, 1)
-                                  .weekday %
-                              7;
+                                      .weekday %
+                                  7;
                           final daysInMonth = DateTime(
                                   visibleMonth.year, visibleMonth.month + 1, 0)
                               .day;
                           final rowCount =
-                              ((leadingDays + daysInMonth + 6) ~/ 7).clamp(5, 6);
+                              ((leadingDays + daysInMonth + 6) ~/ 7)
+                                  .clamp(5, 6);
                           final gridHeight =
                               cellHeight * rowCount + rowGap * (rowCount - 1);
                           return SizedBox(
@@ -166,16 +167,18 @@ class _CalendarPageState extends State<CalendarPage>
                                     physics: const PageScrollPhysics(
                                       parent: BouncingScrollPhysics(),
                                     ),
-                                onPageChanged: (page) {
-                                  _page = page;
-                                  final month = _monthForPage(page);
-                                  final now = DateTime.now();
-                                  final isCurrentMonth =
-                                      month.year == now.year &&
-                                      month.month == now.month;
-                                  _selectedDate = isCurrentMonth
-                                      ? DateTime(now.year, now.month, now.day)
-                                      : DateTime(month.year, month.month, 1);
+                                    onPageChanged: (page) {
+                                      _page = page;
+                                      final month = _monthForPage(page);
+                                      final now = DateTime.now();
+                                      final isCurrentMonth =
+                                          month.year == now.year &&
+                                              month.month == now.month;
+                                      _selectedDate = isCurrentMonth
+                                          ? DateTime(
+                                              now.year, now.month, now.day)
+                                          : DateTime(
+                                              month.year, month.month, 1);
                                       _lastPagePosition = page.toDouble();
                                       setState(() {});
                                     },
@@ -506,10 +509,13 @@ class _DayCell extends StatelessWidget {
                         height: 1,
                         fontWeight: isToday ? FontWeight.w700 : FontWeight.w500,
                         color: isOutsideMonth
-                            ? Colors.black.withValues(alpha: 0.25)
+                            ? (isWeekend
+                                ? const Color(0xFFC83D3D)
+                                    .withValues(alpha: 0.25)
+                                : Colors.black.withValues(alpha: 0.15))
                             : isWeekend
-                            ? const Color(0xFFC83D3D)
-                            : Colors.black)),
+                                ? const Color(0xFFC83D3D)
+                                : Colors.black)),
               ),
             ),
             const SizedBox(height: 1),
@@ -521,10 +527,13 @@ class _DayCell extends StatelessWidget {
                     style: TextStyle(
                         fontSize: 14,
                         color: isOutsideMonth
-                            ? Colors.black.withValues(alpha: 0.25)
+                            ? (isWeekend
+                                ? const Color(0xFFC83D3D)
+                                    .withValues(alpha: 0.45)
+                                : Colors.black.withValues(alpha: 0.25))
                             : isToday
-                            ? const Color(0xFFD9342B)
-                            : const Color(0xFF444444))),
+                                ? const Color(0xFFD9342B)
+                                : const Color(0xFF444444))),
               ),
             ),
             SizedBox(
