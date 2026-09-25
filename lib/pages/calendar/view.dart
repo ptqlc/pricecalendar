@@ -15,6 +15,7 @@ class _CalendarPageState extends State<CalendarPage>
   double _lastPagePosition = _initialPage.toDouble();
   int _lastSwipeDirection = 0;
   DateTime _selectedDate = DateTime.now();
+  int _selectionAnimationKey = 0;
 
   DateTime get _month => _monthForPage(_page);
 
@@ -188,10 +189,14 @@ class _CalendarPageState extends State<CalendarPage>
                                       month: _monthForPage(page),
                                       today: today,
                                       selectedDate: _selectedDate,
+                                      selectionAnimationKey: _selectionAnimationKey,
                                       cellHeight: cellHeight,
                                       lunarLabel: _lunarLabel,
-                                      onSelect: (date) {
-                                        setState(() => _selectedDate = date);
+                                  onSelect: (date) {
+                                    setState(() {
+                                      _selectedDate = date;
+                                      _selectionAnimationKey++;
+                                    });
                                         ScaffoldMessenger.of(context)
                                           ..hideCurrentSnackBar()
                                           ..showSnackBar(SnackBar(
@@ -266,6 +271,7 @@ class _MonthGrid extends StatelessWidget {
       {required this.month,
       required this.today,
       required this.selectedDate,
+      required this.selectionAnimationKey,
       required this.cellHeight,
       required this.lunarLabel,
       required this.onSelect});
@@ -273,6 +279,7 @@ class _MonthGrid extends StatelessWidget {
   final DateTime month;
   final DateTime today;
   final DateTime selectedDate;
+  final int selectionAnimationKey;
   final double cellHeight;
   final String Function(int day) lunarLabel;
   final ValueChanged<DateTime> onSelect;
@@ -302,6 +309,7 @@ class _MonthGrid extends StatelessWidget {
           lunar: lunarLabel(date.day),
           isToday: !isOutsideMonth && DateUtils.isSameDay(date, today),
           isSelected: DateUtils.isSameDay(date, selectedDate),
+          selectionAnimationKey: selectionAnimationKey,
           isOutsideMonth: isOutsideMonth,
           isWeekend: date.weekday == DateTime.saturday ||
               date.weekday == DateTime.sunday,
@@ -479,6 +487,7 @@ class _DayCell extends StatelessWidget {
       required this.lunar,
       required this.isToday,
       required this.isSelected,
+      required this.selectionAnimationKey,
       required this.isOutsideMonth,
       required this.isWeekend,
       required this.onTap});
@@ -486,6 +495,7 @@ class _DayCell extends StatelessWidget {
   final String lunar;
   final bool isToday;
   final bool isSelected;
+  final int selectionAnimationKey;
   final bool isOutsideMonth;
   final bool isWeekend;
   final VoidCallback onTap;
@@ -504,9 +514,9 @@ class _DayCell extends StatelessWidget {
             SizedBox(
               height: 26,
               child: TweenAnimationBuilder<double>(
-                key: ValueKey(isSelected),
-                tween: Tween(begin: isSelected ? 0.72 : 1.0, end: 1.0),
-                duration: const Duration(milliseconds: 620),
+                key: ValueKey('$day-$selectionAnimationKey'),
+                tween: Tween(begin: isSelected ? 0.22 : 1.0, end: 1.0),
+                duration: const Duration(milliseconds: 720),
                 curve: Curves.elasticOut,
                 builder: (context, scale, child) => Transform.scale(
                   scale: scale,
@@ -515,18 +525,19 @@ class _DayCell extends StatelessWidget {
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text('$day',
-                    style: TextStyle(
-                        fontSize: isToday ? 31 : 27,
-                        height: 1,
-                        fontWeight: isToday ? FontWeight.w700 : FontWeight.w500,
-                        color: isOutsideMonth
-                            ? (isWeekend
-                                ? const Color(0xFFC83D3D)
-                                    .withValues(alpha: 0.25)
-                                : Colors.black.withValues(alpha: 0.15))
-                            : isWeekend
-                                ? const Color(0xFFC83D3D)
-                                : Colors.black)),
+                      style: TextStyle(
+                          fontSize: isToday ? 31 : 27,
+                          height: 1,
+                          fontWeight:
+                              isToday ? FontWeight.w700 : FontWeight.w500,
+                          color: isOutsideMonth
+                              ? (isWeekend
+                                  ? const Color(0xFFC83D3D)
+                                      .withValues(alpha: 0.25)
+                                  : Colors.black.withValues(alpha: 0.15))
+                              : isWeekend
+                                  ? const Color(0xFFC83D3D)
+                                  : Colors.black)),
                 ),
               ),
             ),
