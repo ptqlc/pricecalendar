@@ -72,7 +72,9 @@ class _CalendarPageState extends State<CalendarPage>
     super.build(context);
     final today = DateTime.now();
     return Scaffold(
-      backgroundColor: AppTheme.warmSurface,
+      // The status bar can be transparent on some platforms, so the root
+      // background must match the red calendar tab bar.
+      backgroundColor: AppTheme.primary,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: const SystemUiOverlayStyle(
           statusBarColor: AppTheme.primary,
@@ -429,12 +431,6 @@ class _CalendarHeader extends StatelessWidget {
                           icon: const Icon(Icons.chevron_right, size: 24)),
                     ],
                   ),
-                  Container(
-                      height: 2,
-                      width: 86,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(2))),
                 ],
               ),
             ),
