@@ -155,11 +155,16 @@ class _CalendarPageState extends State<CalendarPage>
                                     physics: const PageScrollPhysics(
                                       parent: BouncingScrollPhysics(),
                                     ),
-                                    onPageChanged: (page) {
-                                      _page = page;
-                                      final month = _monthForPage(page);
-                                      _selectedDate =
-                                          DateTime(month.year, month.month, 1);
+                                onPageChanged: (page) {
+                                  _page = page;
+                                  final month = _monthForPage(page);
+                                  final now = DateTime.now();
+                                  final isCurrentMonth =
+                                      month.year == now.year &&
+                                      month.month == now.month;
+                                  _selectedDate = isCurrentMonth
+                                      ? DateTime(now.year, now.month, now.day)
+                                      : DateTime(month.year, month.month, 1);
                                       _lastPagePosition = page.toDouble();
                                       setState(() {});
                                     },
