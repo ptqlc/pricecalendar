@@ -367,9 +367,9 @@ class _DayCell extends StatelessWidget {
                 fit: BoxFit.scaleDown,
                 child: Text('$day',
                     style: TextStyle(
-                        fontSize: 27,
+                        fontSize: isToday ? 31 : 27,
                         height: 1,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: isToday ? FontWeight.w700 : FontWeight.w500,
                         color: isWeekend
                             ? const Color(0xFFC83D3D)
                             : Colors.black)),
