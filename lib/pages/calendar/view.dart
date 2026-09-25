@@ -14,6 +14,7 @@ class _CalendarPageState extends State<CalendarPage>
   int _page = _initialPage;
   double _lastPagePosition = _initialPage.toDouble();
   int _lastSwipeDirection = 0;
+  DateTime _selectedDate = DateTime.now();
 
   DateTime get _month => _monthForPage(_page);
 
@@ -152,23 +153,26 @@ class _CalendarPageState extends State<CalendarPage>
                                 ),
                                 onPageChanged: (page) {
                                   _page = page;
+                                  final month = _monthForPage(page);
+                                  _selectedDate = DateTime(month.year, month.month, 1);
                                   _lastPagePosition = page.toDouble();
                                   setState(() {});
                                 },
                                 itemBuilder: (context, page) => _MonthGrid(
                                   month: _monthForPage(page),
                                   today: today,
+                                  selectedDate: _selectedDate,
                                   cellHeight: cellHeight,
                                   lunarLabel: _lunarLabel,
-                                  onSelect: (date) =>
-                                      ScaffoldMessenger.of(context)
-                                        ..hideCurrentSnackBar()
-                                        ..showSnackBar(SnackBar(
-                                          content: Text(
-                                              '已选择 ${DateFormat('yyyy年M月d日').format(date)}'),
-                                          duration:
-                                              const Duration(milliseconds: 900),
-                                        )),
+                                  onSelect: (date) {
+                                    setState(() => _selectedDate = date);
+                                    ScaffoldMessenger.of(context)
+                                      ..hideCurrentSnackBar()
+                                      ..showSnackBar(SnackBar(
+                                        content: Text('已选择 ${DateFormat('yyyy年M月d日').format(date)}'),
+                                        duration: const Duration(milliseconds: 900),
+                                      ));
+                                  },
                                 ),
                               ),
                             ),
@@ -225,12 +229,14 @@ class _MonthGrid extends StatelessWidget {
   const _MonthGrid(
       {required this.month,
       required this.today,
+      required this.selectedDate,
       required this.cellHeight,
       required this.lunarLabel,
       required this.onSelect});
 
   final DateTime month;
   final DateTime today;
+  final DateTime selectedDate;
   final double cellHeight;
   final String Function(int day) lunarLabel;
   final ValueChanged<DateTime> onSelect;
@@ -257,6 +263,7 @@ class _MonthGrid extends StatelessWidget {
           day: day,
           lunar: lunarLabel(day),
           isToday: DateUtils.isSameDay(date, today),
+          isSelected: DateUtils.isSameDay(date, selectedDate),
           isWeekend: date.weekday == DateTime.saturday ||
               date.weekday == DateTime.sunday,
           onTap: () => onSelect(date),
@@ -264,6 +271,56 @@ class _MonthGrid extends StatelessWidget {
       },
     );
   }
+}
+
+class _SelectionOverlay extends StatelessWidget {
+  const _SelectionOverlay({required this.month, required this.selectedDate, required this.cellWidth, required this.cellHeight});
+
+  final DateTime month;
+  final DateTime selectedDate;
+  final double cellWidth;
+  final double cellHeight;
+
+  @override
+  Widget build(BuildContext context) {
+    final firstDay = DateTime(month.year, month.month, 1);
+    final selectedInMonth = selectedDate.year == month.year && selectedDate.month == month.month;
+    final day = selectedInMonth ? selectedDate.day : 1;
+    final index = firstDay.weekday % 7 + day - 1;
+    final left = (index % 7) * (cellWidth + 2);
+    final top = (index ~/ 7) * (cellHeight + 5);
+    return IgnorePointer(
+      child: AnimatedPositioned(
+        duration: const Duration(milliseconds: 280),
+        curve: Curves.easeOutCubic,
+        left: left,
+        top: top,
+        width: cellWidth,
+        height: cellHeight,
+        child: CustomPaint(
+          painter: _SelectionBorderPainter(),
+        ),
+      ),
+    );
+  }
+}
+
+class _SelectionBorderPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = AppTheme.primary
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+    final rect = RRect.fromRectAndRadius(
+      Offset.zero & size,
+      const Radius.circular(5),
+    );
+    canvas.drawRRect(rect, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class _CalendarHeader extends StatelessWidget {
@@ -340,11 +397,13 @@ class _DayCell extends StatelessWidget {
       {required this.day,
       required this.lunar,
       required this.isToday,
+      required this.isSelected,
       required this.isWeekend,
       required this.onTap});
   final int day;
   final String lunar;
   final bool isToday;
+  final bool isSelected;
   final bool isWeekend;
   final VoidCallback onTap;
 
@@ -354,11 +413,11 @@ class _DayCell extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         child: Container(
           decoration: BoxDecoration(
-            color: isToday ? const Color(0xFFFFF7F1) : Colors.transparent,
+            color: Colors.transparent,
             border: Border.all(
-                color: isToday ? AppTheme.primary : Colors.transparent,
+                color: isSelected ? AppTheme.primary : Colors.transparent,
                 width: 2),
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(5),
           ),
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             SizedBox(
