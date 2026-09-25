@@ -383,7 +383,7 @@ class _CalendarHeader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(18, 12, 14, 0),
       decoration: const BoxDecoration(color: AppTheme.primary),
       child: SizedBox(
-        height: 62,
+        height: 30,
         child: Row(
           children: [
             const Icon(Icons.spa_outlined, color: Colors.white, size: 26),
@@ -410,7 +410,7 @@ class _CalendarHeader extends StatelessWidget {
                           color: Colors.white,
                           padding: EdgeInsets.zero,
                           constraints:
-                              const BoxConstraints(minWidth: 28, minHeight: 32),
+                              const BoxConstraints(minWidth: 24, minHeight: 24),
                           icon: const Icon(Icons.chevron_left, size: 24)),
                       Flexible(
                           child: FittedBox(
@@ -418,14 +418,14 @@ class _CalendarHeader extends StatelessWidget {
                               child: Text(DateFormat('yyyy年MM月').format(month),
                                   style: const TextStyle(
                                       color: Colors.white,
-                                      fontSize: 23,
+                                      fontSize: 21,
                                       fontWeight: FontWeight.w700)))),
                       IconButton(
                           onPressed: onNext,
                           color: Colors.white,
                           padding: EdgeInsets.zero,
                           constraints:
-                              const BoxConstraints(minWidth: 28, minHeight: 32),
+                              const BoxConstraints(minWidth: 24, minHeight: 24),
                           icon: const Icon(Icons.chevron_right, size: 24)),
                     ],
                   ),
