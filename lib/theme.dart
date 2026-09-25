@@ -6,11 +6,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 abstract class AppTheme {
   static const margin = 16.0;
 
-  static const primary = Color(0xFF2972FE);
-  static const success = Color(0xFF23A757);
-  static const warning = Color(0xFFFF1843);
-  static const error = Color(0xFFDA1414);
-  static const info = Color(0xFF2E5AAC);
+  static const primary = Color(0xFFD6322F);
+  static const success = Color(0xFF3C9B5F);
+  static const warning = Color(0xFFE56A3D);
+  static const error = Color(0xFFC62828);
+  static const info = Color(0xFF8B6B57);
+  static const paper = Color(0xFFFFFCF7);
+  static const warmSurface = Color(0xFFF7F3EC);
 
   static ThemeMode mode = ThemeMode.system;
 
@@ -56,16 +58,16 @@ abstract class AppTheme {
 
   static ThemeData get light {
     var scheme = ColorScheme.light(
-      surfaceContainer: Colors.white,
-      surface: Colors.white,
-      onSurface: const Color(0xFF333333),
+      surfaceContainer: warmSurface,
+      surface: paper,
+      onSurface: const Color(0xFF191716),
       primary: primary,
       onPrimary: Colors.white,
-      secondary: const Color(0xFFFFB800),
+      secondary: const Color(0xFFE3A63A),
       onSecondary: Colors.white,
-      tertiary: const Color(0xFFF4F6F9),
-      outline: const Color(0xFFF4F6F9),
-      shadow: const Color(0xFF5A6CEA).withValues(alpha: 0.08),
+      tertiary: const Color(0xFFF1E9DC),
+      outline: const Color(0xFFE9E0D5),
+      shadow: const Color(0xFF8A5B3D).withValues(alpha: 0.08),
       error: error,
       onError: Colors.white,
     );
@@ -110,7 +112,7 @@ abstract class AppTheme {
         ),
       ),
       appBarTheme: AppBarTheme(
-        backgroundColor: scheme.surfaceContainer,
+      backgroundColor: scheme.surfaceContainer,
         scrolledUnderElevation: 0,
         elevation: 0,
         centerTitle: true,

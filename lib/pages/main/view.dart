@@ -36,7 +36,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
           controller: controller.pageController,
           onPageChanged: controller.onPageChanged,
           children: const [
-            HomePage(),
+            CalendarPage(),
             ApplicationPage(),
             ChatPage(),
             ProfilePage(),
@@ -53,26 +53,27 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
                 controller.pageController.jumpToPage(page);
               }
             },
+            selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w700),
             items: const [
               BottomNavigationBarItem(
-                icon: Icon(Ionicons.home_outline),
-                activeIcon: Icon(Ionicons.home),
-                label: 'Home',
+                icon: Icon(Ionicons.calendar_outline),
+                activeIcon: Icon(Ionicons.calendar),
+                label: '日历',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Ionicons.apps_outline),
                 activeIcon: Icon(Ionicons.apps),
-                label: 'Applications',
+                label: '黄历',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Ionicons.chatbubbles_outline),
                 activeIcon: Icon(Ionicons.chatbubbles),
-                label: 'Chat',
+                label: '天气',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Ionicons.person_outline),
                 activeIcon: Icon(Ionicons.person),
-                label: 'Profile',
+                label: '我的',
               ),
             ],
           ),

@@ -3,7 +3,7 @@ library main_page;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_find_job/pages/chat/index.dart';
-import 'package:flutter_find_job/pages/home/index.dart';
+import 'package:flutter_find_job/pages/calendar/index.dart';
 import 'package:flutter_find_job/pages/application/index.dart';
 import 'package:flutter_find_job/pages/profile/index.dart';
 import 'package:flutter_find_job/routes/index.dart';
