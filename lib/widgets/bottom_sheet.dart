@@ -34,7 +34,7 @@ class CustomBottomSheet extends StatelessWidget {
     return showCustomModalBottomSheet<T>(
       context: context,
       enableDrag: enableDrag,
-      barrierColor: const Color(0xFF09101D).withOpacity(0.7),
+      barrierColor: const Color(0xFF09101D).withValues(alpha: 0.7),
       containerWidget: (context, animation, child) {
         return CustomBottomSheet(
           title: title,
@@ -167,7 +167,7 @@ class CustomBottomSheet extends StatelessWidget {
                 bottom: BorderSide(
                   width: 1.w,
                   color: Theme.of(context).dividerTheme.color ??
-                      colorScheme.onSurface.withOpacity(0.08),
+                      colorScheme.onSurface.withValues(alpha: 0.08),
                 ),
               ),
             ),

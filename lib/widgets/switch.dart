@@ -8,7 +8,7 @@ class CustomSwitch extends CupertinoSwitch {
     Color? activeColor,
     Color? trackColor,
   }) : super(
-          activeColor: activeColor ?? AppTheme.primary,
-          trackColor: trackColor ?? const Color(0xFF9098A1),
+          activeTrackColor: activeColor ?? AppTheme.primary,
+          inactiveTrackColor: trackColor ?? const Color(0xFF9098A1),
         );
 }

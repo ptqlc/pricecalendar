@@ -35,7 +35,7 @@ class CustomAlert extends StatelessWidget {
         vertical: size == CustomAlertSize.mini ? 5.w : 10.w,
       ),
       decoration: ShapeDecoration(
-        color: backgroundColor.withOpacity(0.1),
+        color: backgroundColor.withValues(alpha: 0.1),
         shape: const StadiumBorder(),
       ),
       child: Row(

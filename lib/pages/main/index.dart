@@ -10,7 +10,7 @@ import 'package:flutter_find_job/routes/index.dart';
 import 'package:flutter_find_job/store/index.dart';
 import 'package:flutter_find_job/theme.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:ionicons_plus/ionicons_plus.dart';
 
 part 'view.dart';
 part 'controller.dart';

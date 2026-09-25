@@ -154,8 +154,8 @@ class _CustomExpansionTileState extends State<CustomExpansionTile>
         ),
         IconTheme(
           data: IconThemeData(
-            color: colorScheme.primary.withOpacity(
-              widget.child == null ? 0.5 : 1,
+            color: colorScheme.primary.withValues(
+              alpha: widget.child == null ? 0.5 : 1,
             ),
             size: 24.w,
           ),

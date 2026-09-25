@@ -1,7 +1,9 @@
 part of 'index.dart';
 
 enum CustomButtonType { filled, ghost, borderless }
+
 enum CustomButtonSize { large, medium, small }
+
 enum CustomButtonShape { radius, stadium }
 
 class CustomButton extends StatelessWidget {
@@ -88,7 +90,10 @@ class CustomButton extends StatelessWidget {
         onPressed: onPressed,
         style: ButtonStyle(
           textStyle: WidgetStateProperty.all(
-            Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: _fontSize),
+            Theme.of(context)
+                .textTheme
+                .labelLarge
+                ?.copyWith(fontSize: _fontSize),
           ),
           padding: WidgetStateProperty.all(padding ?? _padding),
           foregroundColor: WidgetStateProperty.resolveWith((states) {
@@ -99,12 +104,12 @@ class CustomButton extends StatelessWidget {
               case CustomButtonType.ghost:
               case CustomButtonType.borderless:
                 final color = foregroundColor ?? colorScheme.primary;
-                final opacity = color.opacity / 2;
+                final opacity = color.a / 2;
                 if (states.contains(WidgetState.pressed)) {
-                  return color.withOpacity(opacity);
+                  return color.withValues(alpha: opacity);
                 }
                 if (states.contains(WidgetState.disabled)) {
-                  return color.withOpacity(opacity);
+                  return color.withValues(alpha: opacity);
                 }
                 return color;
             }
@@ -113,13 +118,13 @@ class CustomButton extends StatelessWidget {
             switch (type) {
               case CustomButtonType.filled:
                 final color = backgroundColor ??
-                    colorScheme.primary.withOpacity(isIcon ? 0.1 : 1);
-                final opacity = color.opacity / 2;
+                    colorScheme.primary.withValues(alpha: isIcon ? 0.1 : 1);
+                final opacity = color.a / 2;
                 if (states.contains(WidgetState.pressed)) {
-                  return color.withOpacity(opacity);
+                  return color.withValues(alpha: opacity);
                 }
                 if (states.contains(WidgetState.disabled)) {
-                  return color.withOpacity(opacity);
+                  return color.withValues(alpha: opacity);
                 }
                 return color;
               case CustomButtonType.ghost:
@@ -134,15 +139,15 @@ class CustomButton extends StatelessWidget {
                 return BorderSide.none;
               case CustomButtonType.ghost:
                 final color = foregroundColor ?? colorScheme.primary;
-                final opacity = color.opacity / 2;
+                final opacity = color.a / 2;
                 if (states.contains(WidgetState.pressed)) {
                   return BorderSide(
-                    color: color.withOpacity(opacity),
+                    color: color.withValues(alpha: opacity),
                     width: 2.w,
                   );
                 }
                 if (states.contains(WidgetState.disabled)) {
-                  return BorderSide(color: color.withOpacity(opacity));
+                  return BorderSide(color: color.withValues(alpha: opacity));
                 }
                 return BorderSide(
                   color: color,
@@ -178,7 +183,8 @@ class _ButtonWithIcon extends CustomButton {
             size: size,
             padding: padding,
           ),
-          backgroundColor: backgroundColor ?? foregroundColor?.withOpacity(0.1),
+          backgroundColor:
+              backgroundColor ?? foregroundColor?.withValues(alpha: 0.1),
           isIcon: true,
           padding: padding ?? const EdgeInsets.all(0),
         );

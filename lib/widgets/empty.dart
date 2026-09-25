@@ -44,7 +44,8 @@ class CustomEmpty extends StatelessWidget {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      Color.alphaBlend(color.withOpacity(0.6), Colors.white),
+                      Color.alphaBlend(
+                          color.withValues(alpha: 0.6), Colors.white),
                       color,
                     ],
                   ),

@@ -38,7 +38,7 @@ class BuildUserinfo extends StatelessWidget {
           child: DefaultTextStyle.merge(
             style: TextStyle(
               fontSize: 16.w,
-              color: colorScheme.onSurface.withOpacity(0.7),
+              color: colorScheme.onSurface.withValues(alpha: 0.7),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,

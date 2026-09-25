@@ -34,7 +34,7 @@ class BuildNoticeItem extends StatelessWidget {
                     '17:00',
                     style: TextStyle(
                       fontSize: 14.w,
-                      color: colorScheme.onSurface.withOpacity(0.6),
+                      color: colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                 ],

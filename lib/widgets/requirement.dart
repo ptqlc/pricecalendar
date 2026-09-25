@@ -107,7 +107,7 @@ class _RequirementGroupWithEditorState
         ),
         SizedBox(height: 15.w),
         CustomButton(
-          backgroundColor: colorScheme.primary.withOpacity(0.1),
+          backgroundColor: colorScheme.primary.withValues(alpha: 0.1),
           foregroundColor: colorScheme.primary,
           shape: CustomButtonShape.stadium,
           size: CustomButtonSize.large,

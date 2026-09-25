@@ -12,15 +12,14 @@ abstract class CustomToast {
       ..radius = 20.w
       ..boxShadow = [
         BoxShadow(
-          color: Theme.of(context).colorScheme.shadow.withOpacity(0.15),
+          color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.15),
           offset: const Offset(0, 0),
           blurRadius: 20.w,
         ),
       ]
       ..progressColor = Colors.transparent
       ..contentPadding = EdgeInsets.all(20.w)
-      ..backgroundColor =
-      Theme.of(context).brightness == Brightness.light
+      ..backgroundColor = Theme.of(context).brightness == Brightness.light
           ? Theme.of(context).colorScheme.surface
           : Theme.of(context).colorScheme.tertiary
       ..indicatorColor = Colors.transparent
@@ -31,7 +30,7 @@ abstract class CustomToast {
         color: Theme.of(context).colorScheme.onSurface,
       )
       ..maskType = EasyLoadingMaskType.clear
-      ..maskColor = const Color(0xFF09101D).withOpacity(0.7)
+      ..maskColor = const Color(0xFF09101D).withValues(alpha: 0.7)
       ..userInteractions = true
       ..successWidget = const CustomToastSuccess()
       ..errorWidget = const CustomToastFail()

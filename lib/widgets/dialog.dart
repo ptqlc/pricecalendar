@@ -29,7 +29,7 @@ class CustomDialog extends StatelessWidget {
   }) {
     return showDialog<T>(
       context: context,
-      barrierColor: const Color(0xFF09101D).withOpacity(0.7),
+      barrierColor: const Color(0xFF09101D).withValues(alpha: 0.7),
       builder: (context) => CustomDialog(
         title: title,
         confirm: confirm,

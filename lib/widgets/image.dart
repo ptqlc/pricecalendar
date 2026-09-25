@@ -143,7 +143,8 @@ class CustomImage extends StatelessWidget {
           child: Icon(
             Icons.image_not_supported_outlined,
             size: 24.w,
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            color:
+                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
           ),
         );
     }

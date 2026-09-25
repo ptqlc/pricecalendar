@@ -11,18 +11,17 @@ class CustomCard extends StatelessWidget {
   final Clip clipBehavior;
   final void Function()? onTap;
 
-  const CustomCard({
-    super.key,
-    this.child,
-    this.gradientColors,
-    this.borderColor,
-    this.showBorder = true,
-    this.shadowColor,
-    this.width,
-    this.height,
-    this.onTap,
-    this.clipBehavior = Clip.none
-  });
+  const CustomCard(
+      {super.key,
+      this.child,
+      this.gradientColors,
+      this.borderColor,
+      this.showBorder = true,
+      this.shadowColor,
+      this.width,
+      this.height,
+      this.onTap,
+      this.clipBehavior = Clip.none});
 
   factory CustomCard.job({
     Key? key,
@@ -71,10 +70,12 @@ class CustomCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.all(Radius.circular(20.w)),
-          border: showBorder ? Border.all(
-            color: borderColor ?? Theme.of(context).colorScheme.outline,
-            width: 1.w,
-          ) : null,
+          border: showBorder
+              ? Border.all(
+                  color: borderColor ?? Theme.of(context).colorScheme.outline,
+                  width: 1.w,
+                )
+              : null,
           gradient: gradientColors != null
               ? LinearGradient(
                   begin: Alignment.topLeft,
@@ -260,7 +261,7 @@ class _CardWithJobChild extends StatelessWidget {
       style: TextStyle(
         fontWeight: FontWeight.w600,
         fontSize: label == null ? 16.w : 13.w,
-        color: colorScheme.onSurface.withOpacity(0.9),
+        color: colorScheme.onSurface.withValues(alpha: 0.9),
       ),
       child: subtitle!,
     );
@@ -271,7 +272,7 @@ class _CardWithJobChild extends StatelessWidget {
     return DefaultTextStyle.merge(
       style: TextStyle(
         fontSize: subtitle == null ? 13.w : 11.w,
-        color: colorScheme.onSurface.withOpacity(0.5),
+        color: colorScheme.onSurface.withValues(alpha: 0.5),
       ),
       child: label!,
     );
@@ -371,7 +372,7 @@ class _CardWithChatChild extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         style: TextStyle(
           fontSize: 16.w,
-          color: colorScheme.onSurface.withOpacity(0.7),
+          color: colorScheme.onSurface.withValues(alpha: 0.7),
           height: 1.2,
         ),
         child: timestamp != null
@@ -516,7 +517,7 @@ class _CardWithIconChild extends StatelessWidget {
       width: 64.w,
       height: 64.w,
       decoration: BoxDecoration(
-        color: colorScheme.primary.withOpacity(0.1),
+        color: colorScheme.primary.withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
       child: IconTheme(
@@ -540,7 +541,7 @@ class _CardWithIconChild extends StatelessWidget {
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 15.w,
-            color: colorScheme.onSurface.withOpacity(0.7),
+            color: colorScheme.onSurface.withValues(alpha: 0.7),
           ),
           child: label!,
         ));
@@ -566,7 +567,7 @@ class _CardWithIconChild extends StatelessWidget {
         labelChild = DefaultTextStyle.merge(
           style: TextStyle(
             fontSize: 15.w,
-            color: colorScheme.onSurface.withOpacity(0.7),
+            color: colorScheme.onSurface.withValues(alpha: 0.7),
           ),
           child: label!,
         );

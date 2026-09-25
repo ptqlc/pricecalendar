@@ -57,8 +57,7 @@ class _CustomLoadingIndicatorState extends State<CustomLoadingIndicator>
   @override
   Widget build(BuildContext context) {
     return Transform(
-      transform: Matrix4.identity()
-        ..rotateZ((_animation1.value) * 5 * pi / 6),
+      transform: Matrix4.identity()..rotateZ((_animation1.value) * 5 * pi / 6),
       alignment: FractionalOffset.center,
       child: SizedBox.fromSize(
         size: Size.square(widget.size),
@@ -96,7 +95,7 @@ class _RingPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = (min(size.width, size.height) - paintWidth) / 2;
-    trackPaint.color = trackColor.withOpacity(0.2);
+    trackPaint.color = trackColor.withValues(alpha: 0.2);
     canvas.drawCircle(center, radius, trackPaint);
     trackPaint.color = trackColor;
     canvas.drawArc(

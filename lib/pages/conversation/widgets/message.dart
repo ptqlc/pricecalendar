@@ -36,7 +36,7 @@ class BuildMessage extends StatelessWidget {
                         end: Alignment.bottomRight,
                         colors: [
                           Color.alphaBlend(
-                            colorScheme.primary.withOpacity(0.85),
+                            colorScheme.primary.withValues(alpha: 0.85),
                             Colors.white,
                           ),
                           colorScheme.primary,

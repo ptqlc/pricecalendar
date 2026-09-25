@@ -65,7 +65,7 @@ abstract class AppTheme {
       onSecondary: Colors.white,
       tertiary: const Color(0xFFF4F6F9),
       outline: const Color(0xFFF4F6F9),
-      shadow: const Color(0xFF5A6CEA).withOpacity(0.08),
+      shadow: const Color(0xFF5A6CEA).withValues(alpha: 0.08),
       error: error,
       onError: Colors.white,
     );
@@ -83,7 +83,7 @@ abstract class AppTheme {
       onSecondary: Colors.white,
       tertiary: const Color(0xFF141414),
       outline: const Color(0xFF252525),
-      shadow: const Color(0xFF777777).withOpacity(0.08),
+      shadow: const Color(0xFF777777).withValues(alpha: 0.08),
       error: error,
       onError: Colors.white,
     );
@@ -97,20 +97,6 @@ abstract class AppTheme {
       scaffoldBackgroundColor: scheme.surfaceContainer,
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
-      dialogTheme: DialogTheme(
-        elevation: 0,
-        titleTextStyle: TextStyle(
-          fontSize: 22.w,
-          fontWeight: FontWeight.w600,
-        ),
-        contentTextStyle: TextStyle(fontSize: 20.w),
-        backgroundColor: scheme.brightness == Brightness.light
-            ? scheme.surface
-            : scheme.tertiary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.w),
-        ),
-      ),
       bottomSheetTheme: BottomSheetThemeData(
         elevation: 0,
         backgroundColor: scheme.brightness == Brightness.light
@@ -158,21 +144,17 @@ abstract class AppTheme {
           color: scheme.onSurface,
         ),
       ),
-      bottomAppBarTheme: BottomAppBarTheme(
-        elevation: 0,
-        color: scheme.surfaceContainer,
-      ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         type: BottomNavigationBarType.fixed,
         elevation: 0,
         backgroundColor: scheme.surfaceContainer,
-        unselectedItemColor: scheme.onSurface.withOpacity(0.5),
+        unselectedItemColor: scheme.onSurface.withValues(alpha: 0.5),
         selectedItemColor: scheme.primary,
         unselectedLabelStyle: TextStyle(fontSize: 13.w, height: 1.6),
         selectedLabelStyle: TextStyle(fontSize: 13.w, height: 1.6),
         unselectedIconTheme: IconThemeData(
           size: 24.w,
-          color: scheme.onSurface.withOpacity(0.5),
+          color: scheme.onSurface.withValues(alpha: 0.5),
         ),
         selectedIconTheme: IconThemeData(
           size: 24.w,
@@ -199,7 +181,7 @@ abstract class AppTheme {
         ),
         helperStyle: TextStyle(
           fontSize: 14.w,
-          color: scheme.onSurface.withOpacity(0.7),
+          color: scheme.onSurface.withValues(alpha: 0.7),
         ),
         contentPadding: EdgeInsets.symmetric(
           horizontal: 20.w,
@@ -230,24 +212,9 @@ abstract class AppTheme {
           borderRadius: BorderRadius.all(Radius.circular(100.w)),
         ),
       ),
-      tabBarTheme: TabBarTheme(
-        labelColor: scheme.primary,
-        unselectedLabelColor: scheme.surfaceContainer,
-        labelStyle: TextStyle(
-          color: scheme.onPrimary,
-          fontSize: 16.w,
-          fontWeight: FontWeight.w600,
-        ),
-        unselectedLabelStyle: TextStyle(
-          color: scheme.primary,
-          fontSize: 16.w,
-          fontWeight: FontWeight.w600,
-        ),
-        labelPadding: EdgeInsets.symmetric(horizontal: 6.w),
-      ),
       dividerTheme: DividerThemeData(
         thickness: 1.w,
-        color: scheme.onSurface.withOpacity(0.08),
+        color: scheme.onSurface.withValues(alpha: 0.08),
       ),
     );
   }

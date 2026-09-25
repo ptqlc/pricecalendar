@@ -274,7 +274,7 @@ class CustomInput extends StatelessWidget {
               hintText: hintText,
               hintStyle: const TextStyle(fontWeight: FontWeight.normal),
               suffixIconConstraints: const BoxConstraints(),
-              suffixIcon: _suffixIcon(decorationTheme),
+              //suffixIcon: _suffixIcon(decorationTheme),
             ),
           ),
         ),

@@ -39,7 +39,7 @@ class CustomGallery extends StatefulWidget {
             final distance = Offset(size.width, size.height).distance;
             var opacity = offset.distance / (distance / 2.0);
             opacity = min(1.0, max(1.0 - opacity, 0.0));
-            return Colors.black.withOpacity(opacity);
+            return Colors.black.withValues(alpha: opacity);
           },
         ),
       ),
@@ -150,7 +150,7 @@ class _CustomGalleryState extends State<CustomGallery> {
               height: 10.w,
               decoration: ShapeDecoration(
                 shape: const CircleBorder(),
-                color: Colors.white.withOpacity(opacity),
+                color: Colors.white.withValues(alpha: opacity),
               ),
             );
           }),

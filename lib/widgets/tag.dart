@@ -19,7 +19,7 @@ class CustomTag extends StatelessWidget {
         vertical: 7.w,
       ),
       decoration: ShapeDecoration(
-        color: surfaceColor.withOpacity(0.1),
+        color: surfaceColor.withValues(alpha: 0.1),
         shape: const StadiumBorder(),
       ),
       child: DefaultTextStyle.merge(
