@@ -129,7 +129,18 @@ class _CalendarPageState extends State<CalendarPage>
                           final cellWidth =
                               (constraints.maxWidth - columnGap * 6) / 7;
                           final cellHeight = math.max(62.0, cellWidth / .92);
-                          final gridHeight = cellHeight * 6 + rowGap * 5;
+                          final visibleMonth = _month;
+                          final leadingDays =
+                              DateTime(visibleMonth.year, visibleMonth.month, 1)
+                                  .weekday %
+                              7;
+                          final daysInMonth = DateTime(
+                                  visibleMonth.year, visibleMonth.month + 1, 0)
+                              .day;
+                          final rowCount =
+                              ((leadingDays + daysInMonth + 6) ~/ 7).clamp(5, 6);
+                          final gridHeight =
+                              cellHeight * rowCount + rowGap * (rowCount - 1);
                           return SizedBox(
                             height: gridHeight,
                             child: NotificationListener<ScrollNotification>(
@@ -263,11 +274,12 @@ class _MonthGrid extends StatelessWidget {
     final firstDay = DateTime(month.year, month.month, 1);
     final daysInMonth = DateTime(month.year, month.month + 1, 0).day;
     final leadingDays = firstDay.weekday % 7;
+    final itemCount = ((leadingDays + daysInMonth + 6) ~/ 7) * 7;
     return GridView.builder(
       shrinkWrap: true,
       padding: EdgeInsets.zero,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: 42,
+      itemCount: itemCount,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 7,
         crossAxisSpacing: 2,
@@ -275,13 +287,13 @@ class _MonthGrid extends StatelessWidget {
         mainAxisExtent: cellHeight,
       ),
       itemBuilder: (context, index) {
-        final day = index - leadingDays + 1;
-        if (day < 1 || day > daysInMonth) return const SizedBox.shrink();
-        final date = DateTime(month.year, month.month, day);
+        final date = DateTime(month.year, month.month, index - leadingDays + 1);
+        final isOutsideMonth = date.month != month.month;
         return _DayCell(
-          day: day,
-          lunar: lunarLabel(day),
-          isToday: DateUtils.isSameDay(date, today),
+          day: date.day,
+          lunar: lunarLabel(date.day),
+          isToday: !isOutsideMonth && DateUtils.isSameDay(date, today),
+          isOutsideMonth: isOutsideMonth,
           isWeekend: date.weekday == DateTime.saturday ||
               date.weekday == DateTime.sunday,
           onTap: () => onSelect(date),
@@ -463,11 +475,13 @@ class _DayCell extends StatelessWidget {
       {required this.day,
       required this.lunar,
       required this.isToday,
+      required this.isOutsideMonth,
       required this.isWeekend,
       required this.onTap});
   final int day;
   final String lunar;
   final bool isToday;
+  final bool isOutsideMonth;
   final bool isWeekend;
   final VoidCallback onTap;
 
@@ -491,7 +505,9 @@ class _DayCell extends StatelessWidget {
                         fontSize: isToday ? 31 : 27,
                         height: 1,
                         fontWeight: isToday ? FontWeight.w700 : FontWeight.w500,
-                        color: isWeekend
+                        color: isOutsideMonth
+                            ? Colors.black.withValues(alpha: 0.25)
+                            : isWeekend
                             ? const Color(0xFFC83D3D)
                             : Colors.black)),
               ),
@@ -504,7 +520,9 @@ class _DayCell extends StatelessWidget {
                 child: Text(lunar,
                     style: TextStyle(
                         fontSize: 14,
-                        color: isToday
+                        color: isOutsideMonth
+                            ? Colors.black.withValues(alpha: 0.25)
+                            : isToday
                             ? const Color(0xFFD9342B)
                             : const Color(0xFF444444))),
               ),
