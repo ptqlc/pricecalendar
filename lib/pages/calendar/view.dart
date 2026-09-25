@@ -146,34 +146,48 @@ class _CalendarPageState extends State<CalendarPage>
                                 }
                                 return false;
                               },
-                              child: PageView.builder(
-                                controller: _monthController,
-                                physics: const PageScrollPhysics(
-                                  parent: BouncingScrollPhysics(),
-                                ),
-                                onPageChanged: (page) {
-                                  _page = page;
-                                  final month = _monthForPage(page);
-                                  _selectedDate = DateTime(month.year, month.month, 1);
-                                  _lastPagePosition = page.toDouble();
-                                  setState(() {});
-                                },
-                                itemBuilder: (context, page) => _MonthGrid(
-                                  month: _monthForPage(page),
-                                  today: today,
-                                  selectedDate: _selectedDate,
-                                  cellHeight: cellHeight,
-                                  lunarLabel: _lunarLabel,
-                                  onSelect: (date) {
-                                    setState(() => _selectedDate = date);
-                                    ScaffoldMessenger.of(context)
-                                      ..hideCurrentSnackBar()
-                                      ..showSnackBar(SnackBar(
-                                        content: Text('已选择 ${DateFormat('yyyy年M月d日').format(date)}'),
-                                        duration: const Duration(milliseconds: 900),
-                                      ));
-                                  },
-                                ),
+                              child: Stack(
+                                fit: StackFit.expand,
+                                clipBehavior: Clip.hardEdge,
+                                children: [
+                                  PageView.builder(
+                                    controller: _monthController,
+                                    physics: const PageScrollPhysics(
+                                      parent: BouncingScrollPhysics(),
+                                    ),
+                                    onPageChanged: (page) {
+                                      _page = page;
+                                      final month = _monthForPage(page);
+                                      _selectedDate =
+                                          DateTime(month.year, month.month, 1);
+                                      _lastPagePosition = page.toDouble();
+                                      setState(() {});
+                                    },
+                                    itemBuilder: (context, page) => _MonthGrid(
+                                      month: _monthForPage(page),
+                                      today: today,
+                                      cellHeight: cellHeight,
+                                      lunarLabel: _lunarLabel,
+                                      onSelect: (date) {
+                                        setState(() => _selectedDate = date);
+                                        ScaffoldMessenger.of(context)
+                                          ..hideCurrentSnackBar()
+                                          ..showSnackBar(SnackBar(
+                                            content: Text(
+                                                '已选择  ${DateFormat('yyyy年M月d日').format(date)}'),
+                                            duration: const Duration(
+                                                milliseconds: 900),
+                                          ));
+                                      },
+                                    ),
+                                  ),
+                                  _SelectionOverlay(
+                                    month: _month,
+                                    selectedDate: _selectedDate,
+                                    cellWidth: cellWidth,
+                                    cellHeight: cellHeight,
+                                  ),
+                                ],
                               ),
                             ),
                           );
@@ -229,14 +243,12 @@ class _MonthGrid extends StatelessWidget {
   const _MonthGrid(
       {required this.month,
       required this.today,
-      required this.selectedDate,
       required this.cellHeight,
       required this.lunarLabel,
       required this.onSelect});
 
   final DateTime month;
   final DateTime today;
-  final DateTime selectedDate;
   final double cellHeight;
   final String Function(int day) lunarLabel;
   final ValueChanged<DateTime> onSelect;
@@ -247,6 +259,8 @@ class _MonthGrid extends StatelessWidget {
     final daysInMonth = DateTime(month.year, month.month + 1, 0).day;
     final leadingDays = firstDay.weekday % 7;
     return GridView.builder(
+      shrinkWrap: true,
+      padding: EdgeInsets.zero,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: 42,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -263,7 +277,6 @@ class _MonthGrid extends StatelessWidget {
           day: day,
           lunar: lunarLabel(day),
           isToday: DateUtils.isSameDay(date, today),
-          isSelected: DateUtils.isSameDay(date, selectedDate),
           isWeekend: date.weekday == DateTime.saturday ||
               date.weekday == DateTime.sunday,
           onTap: () => onSelect(date),
@@ -274,7 +287,11 @@ class _MonthGrid extends StatelessWidget {
 }
 
 class _SelectionOverlay extends StatelessWidget {
-  const _SelectionOverlay({required this.month, required this.selectedDate, required this.cellWidth, required this.cellHeight});
+  const _SelectionOverlay(
+      {required this.month,
+      required this.selectedDate,
+      required this.cellWidth,
+      required this.cellHeight});
 
   final DateTime month;
   final DateTime selectedDate;
@@ -284,21 +301,26 @@ class _SelectionOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final firstDay = DateTime(month.year, month.month, 1);
-    final selectedInMonth = selectedDate.year == month.year && selectedDate.month == month.month;
+    final selectedInMonth =
+        selectedDate.year == month.year && selectedDate.month == month.month;
     final day = selectedInMonth ? selectedDate.day : 1;
     final index = firstDay.weekday % 7 + day - 1;
     final left = (index % 7) * (cellWidth + 2);
     final top = (index ~/ 7) * (cellHeight + 5);
-    return IgnorePointer(
-      child: AnimatedPositioned(
-        duration: const Duration(milliseconds: 280),
-        curve: Curves.easeOutCubic,
-        left: left,
-        top: top,
-        width: cellWidth,
-        height: cellHeight,
-        child: CustomPaint(
-          painter: _SelectionBorderPainter(),
+    return AnimatedPositioned(
+      duration: const Duration(milliseconds: 280),
+      curve: Curves.easeOutCubic,
+      left: left,
+      top: top,
+      width: cellWidth,
+      height: cellHeight,
+      child: IgnorePointer(
+        child: SizedBox(
+          width: cellWidth,
+          height: cellHeight,
+          child: CustomPaint(
+            painter: _SelectionBorderPainter(),
+          ),
         ),
       ),
     );
@@ -347,8 +369,13 @@ class _CalendarHeader extends StatelessWidget {
             const Icon(Icons.spa_outlined, color: Colors.white, size: 26),
             const SizedBox(width: 6),
             const Flexible(
-              child: Text('养生日历', maxLines: 1, overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w700)),
+              child: Text('养生日历',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700)),
             ),
             Flexible(
               flex: 2,
@@ -358,17 +385,51 @@ class _CalendarHeader extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      IconButton(onPressed: onPrevious, color: Colors.white, padding: EdgeInsets.zero, constraints: const BoxConstraints(minWidth: 28, minHeight: 32), icon: const Icon(Icons.chevron_left, size: 24)),
-                      Flexible(child: FittedBox(fit: BoxFit.scaleDown, child: Text(DateFormat('yyyy年MM月').format(month), style: const TextStyle(color: Colors.white, fontSize: 23, fontWeight: FontWeight.w700)))),
-                      IconButton(onPressed: onNext, color: Colors.white, padding: EdgeInsets.zero, constraints: const BoxConstraints(minWidth: 28, minHeight: 32), icon: const Icon(Icons.chevron_right, size: 24)),
+                      IconButton(
+                          onPressed: onPrevious,
+                          color: Colors.white,
+                          padding: EdgeInsets.zero,
+                          constraints:
+                              const BoxConstraints(minWidth: 28, minHeight: 32),
+                          icon: const Icon(Icons.chevron_left, size: 24)),
+                      Flexible(
+                          child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(DateFormat('yyyy年MM月').format(month),
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 23,
+                                      fontWeight: FontWeight.w700)))),
+                      IconButton(
+                          onPressed: onNext,
+                          color: Colors.white,
+                          padding: EdgeInsets.zero,
+                          constraints:
+                              const BoxConstraints(minWidth: 28, minHeight: 32),
+                          icon: const Icon(Icons.chevron_right, size: 24)),
                     ],
                   ),
-                  Container(height: 2, width: 86, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(2))),
+                  Container(
+                      height: 2,
+                      width: 86,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(2))),
                 ],
               ),
             ),
-            IconButton(onPressed: onToday, color: Colors.white, padding: EdgeInsets.zero, constraints: const BoxConstraints(minWidth: 30, minHeight: 40), icon: const Icon(Icons.today_outlined, size: 21)),
-            IconButton(onPressed: onNext, color: Colors.white, padding: EdgeInsets.zero, constraints: const BoxConstraints(minWidth: 30, minHeight: 40), icon: const Icon(Icons.add, size: 26)),
+            IconButton(
+                onPressed: onToday,
+                color: Colors.white,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 30, minHeight: 40),
+                icon: const Icon(Icons.today_outlined, size: 21)),
+            IconButton(
+                onPressed: onNext,
+                color: Colors.white,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 30, minHeight: 40),
+                icon: const Icon(Icons.add, size: 26)),
           ],
         ),
       ),
@@ -397,13 +458,11 @@ class _DayCell extends StatelessWidget {
       {required this.day,
       required this.lunar,
       required this.isToday,
-      required this.isSelected,
       required this.isWeekend,
       required this.onTap});
   final int day;
   final String lunar;
   final bool isToday;
-  final bool isSelected;
   final bool isWeekend;
   final VoidCallback onTap;
 
@@ -414,9 +473,7 @@ class _DayCell extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             color: Colors.transparent,
-            border: Border.all(
-                color: isSelected ? AppTheme.primary : Colors.transparent,
-                width: 2),
+            border: Border.all(color: Colors.transparent, width: 2),
             borderRadius: BorderRadius.circular(5),
           ),
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
