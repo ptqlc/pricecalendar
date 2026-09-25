@@ -187,6 +187,7 @@ class _CalendarPageState extends State<CalendarPage>
                                     itemBuilder: (context, page) => _MonthGrid(
                                       month: _monthForPage(page),
                                       today: today,
+                                      selectedDate: _selectedDate,
                                       cellHeight: cellHeight,
                                       lunarLabel: _lunarLabel,
                                       onSelect: (date) {
@@ -264,12 +265,14 @@ class _MonthGrid extends StatelessWidget {
   const _MonthGrid(
       {required this.month,
       required this.today,
+      required this.selectedDate,
       required this.cellHeight,
       required this.lunarLabel,
       required this.onSelect});
 
   final DateTime month;
   final DateTime today;
+  final DateTime selectedDate;
   final double cellHeight;
   final String Function(int day) lunarLabel;
   final ValueChanged<DateTime> onSelect;
@@ -298,6 +301,7 @@ class _MonthGrid extends StatelessWidget {
           day: date.day,
           lunar: lunarLabel(date.day),
           isToday: !isOutsideMonth && DateUtils.isSameDay(date, today),
+          isSelected: DateUtils.isSameDay(date, selectedDate),
           isOutsideMonth: isOutsideMonth,
           isWeekend: date.weekday == DateTime.saturday ||
               date.weekday == DateTime.sunday,
@@ -474,12 +478,14 @@ class _DayCell extends StatelessWidget {
       {required this.day,
       required this.lunar,
       required this.isToday,
+      required this.isSelected,
       required this.isOutsideMonth,
       required this.isWeekend,
       required this.onTap});
   final int day;
   final String lunar;
   final bool isToday;
+  final bool isSelected;
   final bool isOutsideMonth;
   final bool isWeekend;
   final VoidCallback onTap;
@@ -497,9 +503,18 @@ class _DayCell extends StatelessWidget {
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             SizedBox(
               height: 26,
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text('$day',
+              child: TweenAnimationBuilder<double>(
+                key: ValueKey(isSelected),
+                tween: Tween(begin: isSelected ? 0.72 : 1.0, end: 1.0),
+                duration: const Duration(milliseconds: 620),
+                curve: Curves.elasticOut,
+                builder: (context, scale, child) => Transform.scale(
+                  scale: scale,
+                  child: child,
+                ),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text('$day',
                     style: TextStyle(
                         fontSize: isToday ? 31 : 27,
                         height: 1,
@@ -512,6 +527,7 @@ class _DayCell extends StatelessWidget {
                             : isWeekend
                                 ? const Color(0xFFC83D3D)
                                 : Colors.black)),
+                ),
               ),
             ),
             const SizedBox(height: 1),
