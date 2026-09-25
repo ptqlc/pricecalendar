@@ -283,55 +283,37 @@ class _CalendarHeader extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(18, 12, 14, 0),
       decoration: const BoxDecoration(color: AppTheme.primary),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.spa_outlined, color: Colors.white, size: 28),
-              const SizedBox(width: 8),
-              const Text('养生日历',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w700)),
-              const Spacer(),
-              IconButton(
-                  onPressed: onToday,
-                  color: Colors.white,
-                  icon: const Icon(Icons.today_outlined)),
-              IconButton(
-                  onPressed: onNext,
-                  color: Colors.white,
-                  icon: const Icon(Icons.add, size: 30)),
-            ],
-          ),
-          SizedBox(
-            height: 58,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                    onPressed: onPrevious,
-                    color: Colors.white,
-                    icon: const Icon(Icons.chevron_left, size: 28)),
-                Text(DateFormat('yyyy年MM月').format(month),
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 30,
-                        fontWeight: FontWeight.w700)),
-                IconButton(
-                    onPressed: onNext,
-                    color: Colors.white,
-                    icon: const Icon(Icons.chevron_right, size: 28)),
-              ],
+      child: SizedBox(
+        height: 62,
+        child: Row(
+          children: [
+            const Icon(Icons.spa_outlined, color: Colors.white, size: 26),
+            const SizedBox(width: 6),
+            const Flexible(
+              child: Text('养生日历', maxLines: 1, overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w700)),
             ),
-          ),
-          Container(
-              height: 3,
-              width: 112,
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(3))),
-        ],
+            Flexible(
+              flex: 2,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(onPressed: onPrevious, color: Colors.white, padding: EdgeInsets.zero, constraints: const BoxConstraints(minWidth: 28, minHeight: 32), icon: const Icon(Icons.chevron_left, size: 24)),
+                      Flexible(child: FittedBox(fit: BoxFit.scaleDown, child: Text(DateFormat('yyyy年MM月').format(month), style: const TextStyle(color: Colors.white, fontSize: 23, fontWeight: FontWeight.w700)))),
+                      IconButton(onPressed: onNext, color: Colors.white, padding: EdgeInsets.zero, constraints: const BoxConstraints(minWidth: 28, minHeight: 32), icon: const Icon(Icons.chevron_right, size: 24)),
+                    ],
+                  ),
+                  Container(height: 2, width: 86, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(2))),
+                ],
+              ),
+            ),
+            IconButton(onPressed: onToday, color: Colors.white, padding: EdgeInsets.zero, constraints: const BoxConstraints(minWidth: 30, minHeight: 40), icon: const Icon(Icons.today_outlined, size: 21)),
+            IconButton(onPressed: onNext, color: Colors.white, padding: EdgeInsets.zero, constraints: const BoxConstraints(minWidth: 30, minHeight: 40), icon: const Icon(Icons.add, size: 26)),
+          ],
+        ),
       ),
     );
   }
