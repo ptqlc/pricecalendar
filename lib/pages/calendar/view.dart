@@ -53,39 +53,55 @@ class _CalendarPageState extends State<CalendarPage>
   }
 
   Future<void> _showMonthPicker() async {
+    final baseYear = DateTime.now().year;
+    final years = List<int>.generate(101, (index) => baseYear - 50 + index);
     var year = _month.year;
     var month = _month.month;
+    final yearController = FixedExtentScrollController(
+      initialItem: years.indexOf(year).clamp(0, years.length - 1),
+    );
+    final monthController = FixedExtentScrollController(initialItem: month - 1);
     final result = await showDialog<DateTime>(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
           title: const Text('选择年月'),
-          content: Row(
-            children: [
-              Expanded(
-                child: DropdownButtonFormField<int>(
-                  value: year,
-                  decoration: const InputDecoration(labelText: '年'),
-                  items: [
-                    for (var value = year - 50; value <= year + 50; value++)
-                      DropdownMenuItem(value: value, child: Text('$value年')),
-                  ],
-                  onChanged: (value) => setDialogState(() => year = value!),
+          content: SizedBox(
+            height: 220,
+            child: Row(
+              children: [
+                Expanded(
+                  child: CupertinoPicker(
+                    scrollController: yearController,
+                    itemExtent: 44,
+                    diameterRatio: 1.15,
+                    squeeze: 1.05,
+                    useMagnifier: true,
+                    magnification: 1.18,
+                    onSelectedItemChanged: (index) {
+                      HapticFeedback.selectionClick();
+                      setDialogState(() => year = years[index]);
+                    },
+                    children: [for (final value in years) Text('$value年')],
+                  ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: DropdownButtonFormField<int>(
-                  value: month,
-                  decoration: const InputDecoration(labelText: '月'),
-                  items: [
-                    for (var value = 1; value <= 12; value++)
-                      DropdownMenuItem(value: value, child: Text('$value月')),
-                  ],
-                  onChanged: (value) => setDialogState(() => month = value!),
+                Expanded(
+                  child: CupertinoPicker(
+                    scrollController: monthController,
+                    itemExtent: 44,
+                    diameterRatio: 1.15,
+                    squeeze: 1.05,
+                    useMagnifier: true,
+                    magnification: 1.18,
+                    onSelectedItemChanged: (index) {
+                      HapticFeedback.selectionClick();
+                      setDialogState(() => month = index + 1);
+                    },
+                    children: [for (var value = 1; value <= 12; value++) Text('$value月')],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           actions: [
             TextButton(onPressed: () => Navigator.pop(context), child: const Text('取消')),
@@ -97,6 +113,8 @@ class _CalendarPageState extends State<CalendarPage>
         ),
       ),
     );
+    yearController.dispose();
+    monthController.dispose();
     if (result != null && mounted) _goToSelectedMonth(result);
   }
 
