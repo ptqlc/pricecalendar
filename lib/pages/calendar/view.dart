@@ -152,9 +152,14 @@ class _CalendarPageState extends State<CalendarPage>
                                   .clamp(5, 6);
                           final gridHeight =
                               cellHeight * rowCount + rowGap * (rowCount - 1);
-                          return SizedBox(
-                            height: gridHeight,
-                            child: NotificationListener<ScrollNotification>(
+                          return AnimatedSize(
+                            duration: const Duration(milliseconds: 320),
+                            curve: Curves.easeInOutCubic,
+                            alignment: Alignment.topCenter,
+                            clipBehavior: Clip.hardEdge,
+                            child: SizedBox(
+                              height: gridHeight,
+                              child: NotificationListener<ScrollNotification>(
                               onNotification: (notification) {
                                 if (notification.metrics.axis ==
                                     Axis.horizontal) {
@@ -222,6 +227,7 @@ class _CalendarPageState extends State<CalendarPage>
                                     cellHeight: cellHeight,
                                   ),
                                 ],
+                              ),
                               ),
                             ),
                           );
