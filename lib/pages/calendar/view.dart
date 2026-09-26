@@ -270,9 +270,8 @@ class _CalendarPageState extends State<CalendarPage>
     );
   }
 
-  String _lunarLabel(int day) {
-    const labels = ['初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十'];
-    return labels[(day - 1) % labels.length];
+  String _lunarLabel(DateTime date) {
+    return Lunar.fromDate(date).getDayInChinese();
   }
 
   @override
@@ -294,7 +293,7 @@ class _MonthGrid extends StatelessWidget {
   final DateTime selectedDate;
   final int selectionAnimationKey;
   final double cellHeight;
-  final String Function(int day) lunarLabel;
+  final String Function(DateTime date) lunarLabel;
   final ValueChanged<DateTime> onSelect;
 
   @override
@@ -319,7 +318,7 @@ class _MonthGrid extends StatelessWidget {
         final isOutsideMonth = date.month != month.month;
         return _DayCell(
           day: date.day,
-          lunar: lunarLabel(date.day),
+          lunar: lunarLabel(date),
           isToday: !isOutsideMonth && DateUtils.isSameDay(date, today),
           isSelected: DateUtils.isSameDay(date, selectedDate),
           selectionAnimationKey: selectionAnimationKey,
