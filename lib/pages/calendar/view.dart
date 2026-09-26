@@ -240,7 +240,7 @@ class _CalendarPageState extends State<CalendarPage>
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
                 sliver: SliverToBoxAdapter(
-                  child: _AlmanacCard(month: _month),
+                  child: _AlmanacCard(date: _selectedDate),
                 ),
               ),
               const SliverPadding(
@@ -583,17 +583,24 @@ class _DayCell extends StatelessWidget {
 }
 
 class _AlmanacCard extends StatelessWidget {
-  const _AlmanacCard({required this.month});
-  final DateTime month;
+  const _AlmanacCard({required this.date});
+  final DateTime date;
+
   @override
-  Widget build(BuildContext context) => Container(
+  Widget build(BuildContext context) {
+    final lunar = Lunar.fromDate(date);
+    final solar = Solar.fromDate(date);
+    final yi = lunar.getDayYi().take(4).join(' · ');
+    final ji = lunar.getDayJi().take(4).join(' · ');
+
+    return Container(
         padding: const EdgeInsets.fromLTRB(18, 16, 16, 16),
         decoration: BoxDecoration(
             color: const Color(0xFFFFF8E9),
             borderRadius: BorderRadius.circular(18)),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
-            Text(DateFormat('M月节气').format(month),
+            Text('${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}',
                 style: const TextStyle(
                     color: Color(0xFFC7352E),
                     fontFamily: 'serif',
@@ -610,13 +617,17 @@ class _AlmanacCard extends StatelessWidget {
                 child: const Text('日程查询 ›'))
           ]),
           const SizedBox(height: 8),
-          const Text('• 今日宜静心  • 适合记录重要安排',
+          Text('${lunar.getYearInGanZhi()}年 · ${lunar.getMonthInGanZhi()}月 · ${lunar.getDayInGanZhi()}日 · ${lunar.getTimeInGanZhi()}时',
               style: TextStyle(color: Color(0xFF77716A), fontSize: 15)),
           const SizedBox(height: 8),
-          const Text('宜  规划 · 读书 · 会友        忌  熬夜 · 忘记提醒',
+          Text('星座 ${solar.getXingZuo()} · 宜 $yi',
+              style: const TextStyle(fontSize: 14, color: Color(0xFF4B4844))),
+          const SizedBox(height: 5),
+          Text('忌 $ji',
               style: TextStyle(fontSize: 14, color: Color(0xFF4B4844))),
         ]),
       );
+  }
 }
 
 class _FeatureCard extends StatelessWidget {
