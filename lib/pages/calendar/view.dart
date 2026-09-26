@@ -42,6 +42,64 @@ class _CalendarPageState extends State<CalendarPage>
     );
   }
 
+  void _goToSelectedMonth(DateTime month) {
+    final now = DateTime.now();
+    final target = (month.year - now.year) * 12 + month.month - now.month;
+    _monthController.animateToPage(
+      _initialPage + target,
+      duration: const Duration(milliseconds: 420),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
+  Future<void> _showMonthPicker() async {
+    var year = _month.year;
+    var month = _month.month;
+    final result = await showDialog<DateTime>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: const Text('选择年月'),
+          content: Row(
+            children: [
+              Expanded(
+                child: DropdownButtonFormField<int>(
+                  value: year,
+                  decoration: const InputDecoration(labelText: '年'),
+                  items: [
+                    for (var value = year - 50; value <= year + 50; value++)
+                      DropdownMenuItem(value: value, child: Text('$value年')),
+                  ],
+                  onChanged: (value) => setDialogState(() => year = value!),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: DropdownButtonFormField<int>(
+                  value: month,
+                  decoration: const InputDecoration(labelText: '月'),
+                  items: [
+                    for (var value = 1; value <= 12; value++)
+                      DropdownMenuItem(value: value, child: Text('$value月')),
+                  ],
+                  onChanged: (value) => setDialogState(() => month = value!),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('取消')),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, DateTime(year, month)),
+              child: const Text('确定'),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (result != null && mounted) _goToSelectedMonth(result);
+  }
+
   void _onMonthScroll() {
     if (!_monthController.hasClients) return;
     final page = _monthController.page ?? _page.toDouble();
@@ -83,8 +141,7 @@ class _CalendarPageState extends State<CalendarPage>
         ),
         title: _CalendarHeader(
           month: _month,
-          onPrevious: () => _goToMonth(-1),
-          onNext: () => _goToMonth(1),
+          onMonthTap: _showMonthPicker,
           onToday: () {
             final current = DateTime(today.year, today.month);
             _monthController.animateToPage(
@@ -396,13 +453,11 @@ class _SelectionBorderPainter extends CustomPainter {
 class _CalendarHeader extends StatelessWidget {
   const _CalendarHeader(
       {required this.month,
-      required this.onPrevious,
-      required this.onNext,
+      required this.onMonthTap,
       required this.onToday});
 
   final DateTime month;
-  final VoidCallback onPrevious;
-  final VoidCallback onNext;
+  final VoidCallback onMonthTap;
   final VoidCallback onToday;
 
   @override
@@ -433,28 +488,17 @@ class _CalendarHeader extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      IconButton(
-                          onPressed: onPrevious,
-                          color: Colors.white,
-                          padding: EdgeInsets.zero,
-                          constraints:
-                              const BoxConstraints(minWidth: 24, minHeight: 24),
-                          icon: const Icon(Icons.chevron_left, size: 24)),
-                      Flexible(
-                          child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(DateFormat('yyyy年MM月').format(month),
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 21,
-                                      fontWeight: FontWeight.w700)))),
-                      IconButton(
-                          onPressed: onNext,
-                          color: Colors.white,
-                          padding: EdgeInsets.zero,
-                          constraints:
-                              const BoxConstraints(minWidth: 24, minHeight: 24),
-                          icon: const Icon(Icons.chevron_right, size: 24)),
+                      InkWell(
+                        onTap: onMonthTap,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(DateFormat('yyyy年MM月').format(month), style: const TextStyle(color: Colors.white, fontSize: 21, fontWeight: FontWeight.w700)),
+                            const SizedBox(width: 5),
+                            SvgPicture.asset('assets/images/svg/down.svg', width: 16, height: 16, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -467,7 +511,7 @@ class _CalendarHeader extends StatelessWidget {
                 constraints: const BoxConstraints(minWidth: 30, minHeight: 40),
                 icon: const Icon(Icons.today_outlined, size: 21)),
             IconButton(
-                onPressed: onNext,
+                onPressed: onMonthTap,
                 color: Colors.white,
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(minWidth: 30, minHeight: 40),
