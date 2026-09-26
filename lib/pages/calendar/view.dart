@@ -160,74 +160,76 @@ class _CalendarPageState extends State<CalendarPage>
                             child: SizedBox(
                               height: gridHeight,
                               child: NotificationListener<ScrollNotification>(
-                              onNotification: (notification) {
-                                if (notification.metrics.axis ==
-                                    Axis.horizontal) {
-                                  if (notification
-                                      is ScrollUpdateNotification) {
-                                    _onMonthScroll();
-                                  } else if (notification
-                                      is ScrollEndNotification) {
-                                    _onMonthScrollEnd();
+                                onNotification: (notification) {
+                                  if (notification.metrics.axis ==
+                                      Axis.horizontal) {
+                                    if (notification
+                                        is ScrollUpdateNotification) {
+                                      _onMonthScroll();
+                                    } else if (notification
+                                        is ScrollEndNotification) {
+                                      _onMonthScrollEnd();
+                                    }
                                   }
-                                }
-                                return false;
-                              },
-                              child: Stack(
-                                fit: StackFit.expand,
-                                clipBehavior: Clip.hardEdge,
-                                children: [
-                                  PageView.builder(
-                                    controller: _monthController,
-                                    physics: const PageScrollPhysics(
-                                      parent: BouncingScrollPhysics(),
-                                    ),
-                                    onPageChanged: (page) {
-                                      _page = page;
-                                      final month = _monthForPage(page);
-                                      final now = DateTime.now();
-                                      final isCurrentMonth =
-                                          month.year == now.year &&
-                                              month.month == now.month;
-                                      _selectedDate = isCurrentMonth
-                                          ? DateTime(
-                                              now.year, now.month, now.day)
-                                          : DateTime(
-                                              month.year, month.month, 1);
-                                      _lastPagePosition = page.toDouble();
-                                      setState(() {});
-                                    },
-                                    itemBuilder: (context, page) => _MonthGrid(
-                                      month: _monthForPage(page),
-                                      today: today,
-                                      selectedDate: _selectedDate,
-                                      selectionAnimationKey: _selectionAnimationKey,
-                                      cellHeight: cellHeight,
-                                      lunarLabel: _lunarLabel,
-                                  onSelect: (date) {
-                                    setState(() {
-                                      _selectedDate = date;
-                                      _selectionAnimationKey++;
-                                    });
-                                        ScaffoldMessenger.of(context)
-                                          ..hideCurrentSnackBar()
-                                          ..showSnackBar(SnackBar(
-                                            content: Text(
-                                                '已选择  ${DateFormat('yyyy年M月d日').format(date)}'),
-                                            duration: const Duration(
-                                                milliseconds: 900),
-                                          ));
+                                  return false;
+                                },
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  clipBehavior: Clip.hardEdge,
+                                  children: [
+                                    PageView.builder(
+                                      controller: _monthController,
+                                      physics: const PageScrollPhysics(
+                                        parent: BouncingScrollPhysics(),
+                                      ),
+                                      onPageChanged: (page) {
+                                        _page = page;
+                                        final month = _monthForPage(page);
+                                        final now = DateTime.now();
+                                        final isCurrentMonth =
+                                            month.year == now.year &&
+                                                month.month == now.month;
+                                        _selectedDate = isCurrentMonth
+                                            ? DateTime(
+                                                now.year, now.month, now.day)
+                                            : DateTime(
+                                                month.year, month.month, 1);
+                                        _lastPagePosition = page.toDouble();
+                                        setState(() {});
                                       },
+                                      itemBuilder: (context, page) =>
+                                          _MonthGrid(
+                                        month: _monthForPage(page),
+                                        today: today,
+                                        selectedDate: _selectedDate,
+                                        selectionAnimationKey:
+                                            _selectionAnimationKey,
+                                        cellHeight: cellHeight,
+                                        lunarLabel: _lunarLabel,
+                                        onSelect: (date) {
+                                          setState(() {
+                                            _selectedDate = date;
+                                            _selectionAnimationKey++;
+                                          });
+                                          ScaffoldMessenger.of(context)
+                                            ..hideCurrentSnackBar()
+                                            ..showSnackBar(SnackBar(
+                                              content: Text(
+                                                  '已选择  ${DateFormat('yyyy年M月d日').format(date)}'),
+                                              duration: const Duration(
+                                                  milliseconds: 900),
+                                            ));
+                                        },
+                                      ),
                                     ),
-                                  ),
-                                  _SelectionOverlay(
-                                    month: _month,
-                                    selectedDate: _selectedDate,
-                                    cellWidth: cellWidth,
-                                    cellHeight: cellHeight,
-                                  ),
-                                ],
-                              ),
+                                    _SelectionOverlay(
+                                      month: _month,
+                                      selectedDate: _selectedDate,
+                                      cellWidth: cellWidth,
+                                      cellHeight: cellHeight,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           );
@@ -594,39 +596,44 @@ class _AlmanacCard extends StatelessWidget {
     final ji = lunar.getDayJi().take(4).join(' · ');
 
     return Container(
-        padding: const EdgeInsets.fromLTRB(18, 16, 16, 16),
-        decoration: BoxDecoration(
-            color: const Color(0xFFFFF8E9),
-            borderRadius: BorderRadius.circular(18)),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      padding: const EdgeInsets.fromLTRB(18, 16, 16, 16),
+      decoration: BoxDecoration(
+          color: const Color(0xFFFFF8E9),
+          borderRadius: BorderRadius.circular(18)),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
-            Text('${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}',
-                style: const TextStyle(
-                    color: Color(0xFFC7352E),
-                    fontFamily: 'serif',
-                    fontSize: 27,
-                    fontWeight: FontWeight.w700)),
-            const Spacer(),
-            OutlinedButton(
-                onPressed: () {},
-                style: OutlinedButton.styleFrom(
-                    foregroundColor: const Color(0xFF8D563D),
-                    side: const BorderSide(color: Color(0xFFE9D5B9)),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12))),
-                child: const Text('日程查询 ›'))
-          ]),
-          const SizedBox(height: 8),
-          Text('${lunar.getYearInGanZhi()}年 · ${lunar.getMonthInGanZhi()}月 · ${lunar.getDayInGanZhi()}日 · ${lunar.getTimeInGanZhi()}时',
-              style: TextStyle(color: Color(0xFF77716A), fontSize: 15)),
-          const SizedBox(height: 8),
-          Text('星座 ${solar.getXingZuo()} · 宜 $yi',
-              style: const TextStyle(fontSize: 14, color: Color(0xFF4B4844))),
-          const SizedBox(height: 5),
-          Text('忌 $ji',
-              style: TextStyle(fontSize: 14, color: Color(0xFF4B4844))),
+            Flexible(
+                child: RichText(
+                    text: TextSpan(children: [
+                  TextSpan(
+                      text:
+                          '${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}',
+                      style: const TextStyle(
+                          color: Color(0xFFC7352E),
+                          fontFamily: 'serif',
+                          fontSize: 23,
+                          fontWeight: FontWeight.w700)),
+                  TextSpan(
+                      text:
+                          '  ·  ${lunar.getYearInGanZhi()}(${lunar.getYearShengXiao()})年  ·  ${solar.getXingZuo()}座',
+                      style: const TextStyle(
+                          color: Color(0xFF8D563D),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600)),
+                ]))),
+          //const Spacer(),
         ]),
-      );
+        const SizedBox(height: 8),
+        Text(
+            '${lunar.getMonthInGanZhi()}月 · ${lunar.getDayInGanZhi()}日 · ${lunar.getTimeInGanZhi()}时',
+            style: TextStyle(color: Color(0xFF77716A), fontSize: 15)),
+        const SizedBox(height: 8),
+        Text('星座 ${solar.getXingZuo()} · 宜 $yi',
+            style: const TextStyle(fontSize: 14, color: Color(0xFF4B4844))),
+        const SizedBox(height: 5),
+        Text('忌 $ji', style: TextStyle(fontSize: 14, color: Color(0xFF4B4844))),
+      ]),
+    );
   }
 }
 
