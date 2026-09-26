@@ -327,7 +327,7 @@ class _MonthGrid extends StatelessWidget {
           isOutsideMonth: isOutsideMonth,
           isWeekend: date.weekday == DateTime.saturday ||
               date.weekday == DateTime.sunday,
-          onTap: () => onSelect(date),
+          onTap: isOutsideMonth ? null : () => onSelect(date),
         );
       },
     );
@@ -512,7 +512,7 @@ class _DayCell extends StatelessWidget {
   final int selectionAnimationKey;
   final bool isOutsideMonth;
   final bool isWeekend;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) => InkWell(
