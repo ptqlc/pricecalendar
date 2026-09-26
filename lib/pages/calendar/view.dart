@@ -73,6 +73,31 @@ class _CalendarPageState extends State<CalendarPage>
     super.build(context);
     final today = DateTime.now();
     return Scaffold(
+      appBar: CustomAppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: AppTheme.primary,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: AppTheme.primary,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+        ),
+        title: _CalendarHeader(
+          month: _month,
+          onPrevious: () => _goToMonth(-1),
+          onNext: () => _goToMonth(1),
+          onToday: () {
+            final current = DateTime(today.year, today.month);
+            _monthController.animateToPage(
+              _initialPage +
+                  (current.year - DateTime.now().year) * 12 +
+                  current.month -
+                  DateTime.now().month,
+              duration: const Duration(milliseconds: 360),
+              curve: Curves.easeOutCubic,
+            );
+          },
+        ),
+      ),
       // The status bar can be transparent on some platforms, so the root
       // background must match the red calendar tab bar.
       backgroundColor: AppTheme.primary,
@@ -88,24 +113,6 @@ class _CalendarPageState extends State<CalendarPage>
           bottom: false,
           child: CustomScrollView(
             slivers: [
-              SliverToBoxAdapter(
-                child: _CalendarHeader(
-                  month: _month,
-                  onPrevious: () => _goToMonth(-1),
-                  onNext: () => _goToMonth(1),
-                  onToday: () {
-                    final current = DateTime(today.year, today.month);
-                    _monthController.animateToPage(
-                      _initialPage +
-                          (current.year - DateTime.now().year) * 12 +
-                          current.month -
-                          DateTime.now().month,
-                      duration: const Duration(milliseconds: 360),
-                      curve: Curves.easeOutCubic,
-                    );
-                  },
-                ),
-              ),
               SliverToBoxAdapter(
                 child: Container(
                   color: AppTheme.paper,
