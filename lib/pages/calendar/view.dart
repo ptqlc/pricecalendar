@@ -601,26 +601,25 @@ class _AlmanacCard extends StatelessWidget {
           color: const Color(0xFFFFF8E9),
           borderRadius: BorderRadius.circular(18)),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(children: [
-            Flexible(
-                child: RichText(
-                    text: TextSpan(children: [
-                  TextSpan(
-                      text:
-                          '${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}',
-                      style: const TextStyle(
-                          color: Color(0xFFC7352E),
-                          fontFamily: 'serif',
-                          fontSize: 23,
-                          fontWeight: FontWeight.w700)),
-                  TextSpan(
-                      text:
-                          '  ·  ${lunar.getYearInGanZhi()}(${lunar.getYearShengXiao()})年  ·  ${solar.getXingZuo()}座',
-                      style: const TextStyle(
-                          color: Color(0xFF8D563D),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600)),
-                ]))),
+        Row(children: [
+          Flexible(
+              child: RichText(
+                  text: TextSpan(children: [
+            TextSpan(
+                text: '${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}',
+                style: const TextStyle(
+                    color: Color(0xFFC7352E),
+                    fontFamily: 'serif',
+                    fontSize: 23,
+                    fontWeight: FontWeight.w700)),
+            TextSpan(
+                text:
+                    '  ·  ${lunar.getYearInGanZhi()}(${lunar.getYearShengXiao()})年  ·  ${solar.getXingZuo()}座',
+                style: const TextStyle(
+                    color: Color(0xFF8D563D),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600)),
+          ]))),
           //const Spacer(),
         ]),
         const SizedBox(height: 8),
@@ -628,10 +627,29 @@ class _AlmanacCard extends StatelessWidget {
             '${lunar.getMonthInGanZhi()}月 · ${lunar.getDayInGanZhi()}日 · ${lunar.getTimeInGanZhi()}时',
             style: TextStyle(color: Color(0xFF77716A), fontSize: 15)),
         const SizedBox(height: 8),
-        Text('星座 ${solar.getXingZuo()} · 宜 $yi',
-            style: const TextStyle(fontSize: 14, color: Color(0xFF4B4844))),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SvgPicture.asset('assets/images/svg/well.svg', width: 22, height: 22),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text(yi,
+                  style: const TextStyle(fontSize: 14, color: Color(0xFF4B4844))),
+            ),
+          ],
+        ),
         const SizedBox(height: 5),
-        Text('忌 $ji', style: TextStyle(fontSize: 14, color: Color(0xFF4B4844))),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SvgPicture.asset('assets/images/svg/nowell.svg', width: 22, height: 22),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text(ji,
+                  style: const TextStyle(fontSize: 14, color: Color(0xFF4B4844))),
+            ),
+          ],
+        ),
       ]),
     );
   }
